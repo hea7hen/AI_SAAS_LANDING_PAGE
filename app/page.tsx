@@ -7,8 +7,9 @@ import Link from "next/link"
 import { Moon, Sun, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+// import { Badge } from "@/components/ui/badge"
 import { useTheme } from "next-themes"
+import { cn } from "@/lib/utils"
 
 export default function Home() {
   const { theme, setTheme } = useTheme()
@@ -108,9 +109,9 @@ function HeroSection() {
       <div className="container relative z-10 pt-20 pb-16 md:pt-32 md:pb-24 lg:pt-40 lg:pb-32">
         <div className="max-w-3xl mx-auto text-center space-y-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <Badge className="mb-4 px-3 py-1 text-xs rounded-full bg-primary/10 text-primary border-primary/20">
+            {/* <Badge className="mb-4 px-3 py-1 text-xs rounded-full bg-primary/10 text-primary border-primary/20">
               AI-Powered Productivity
-            </Badge>
+            </Badge> */}
           </motion.div>
           <motion.h1
             className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
@@ -220,15 +221,15 @@ function TestimonialsSection() {
 
 function PricingSection() {
   return (
-    <section id="pricing" className="py-24 md:py-32 bg-muted/30">
+    <section id="pricing" className="py-24 md:py-32">
       <div className="container">
         <SectionHeading
           title="Simple, transparent pricing"
-          description="Choose the plan that's right for you and start boosting your productivity today."
+          description="Choose the plan that's right for you"
         />
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mt-16 max-w-5xl mx-auto">
+        <div className="grid gap-8 md:grid-cols-3 mt-16">
           {pricingPlans.map((plan, index) => (
-            <PricingCard key={index} plan={plan} index={index} />
+            <PricingCard key={index} plan={plan} />
           ))}
         </div>
       </div>
@@ -375,24 +376,23 @@ function SectionHeading({ title, description }) {
 }
 
 function FeatureCard({ feature, index }) {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  })
-
   return (
     <motion.div
-      ref={ref}
       initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileHover={{ 
+        scale: 1.02,
+        boxShadow: "0 10px 30px -10px rgba(0,0,0,0.1)",
+        transition: { duration: 0.2 }
+      }}
     >
-      <Card className="border border-border/40 bg-background/60 backdrop-blur-sm hover:border-primary/20 transition-all duration-300 overflow-hidden rounded-xl">
+      <Card className="relative overflow-hidden">
         <CardContent className="p-6">
-          <div className="mb-4 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+          <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
             {feature.icon}
           </div>
-          <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+          <h3 className="font-semibold mb-2">{feature.title}</h3>
           <p className="text-muted-foreground">{feature.description}</p>
         </CardContent>
       </Card>
@@ -454,58 +454,54 @@ function TestimonialCard({ testimonial, index }) {
   )
 }
 
-function PricingCard({ plan, index }) {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  })
-
+function PricingCard({ plan }) {
   return (
     <motion.div
-      ref={ref}
       initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ 
+        scale: 1.03,
+        boxShadow: "0 20px 40px -20px rgba(0,0,0,0.1)",
+        transition: { duration: 0.2 }
+      }}
     >
-      <Card
-        className={`border ${plan.featured ? "border-primary/50 bg-primary/5" : "border-border/40 bg-background/60"} backdrop-blur-sm h-full rounded-xl`}
-      >
+      <Card className={cn(
+        "relative overflow-hidden",
+        plan.featured && "border-primary shadow-lg"
+      )}>
         <CardContent className="p-6">
           {plan.featured && (
-            <div className="absolute -top-3 left-0 right-0 mx-auto w-fit rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
-              Most Popular
+            <div className="absolute top-0 right-0 bg-primary px-3 py-1 text-sm text-primary-foreground rounded-bl-lg">
+              Popular
             </div>
           )}
-          <div className="mb-6">
-            <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-bold">${plan.price}</span>
-              <span className="text-muted-foreground">/month</span>
-            </div>
-            <p className="text-muted-foreground mt-2">{plan.description}</p>
+          <h3 className="font-semibold text-xl mb-2">{plan.name}</h3>
+          <div className="flex items-baseline gap-1 mb-4">
+            <span className="text-3xl font-bold">${plan.price}</span>
+            <span className="text-muted-foreground">/month</span>
           </div>
-          <ul className="space-y-3 mb-6">
-            {plan.features.map((feature, i) => (
-              <li key={i} className="flex items-start gap-2">
-                <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center text-primary mt-0.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
+          <p className="text-muted-foreground mb-4">{plan.description}</p>
+          <ul className="space-y-2 mb-6">
+            {plan.features.map((feature: string, i: number) => (
+              <li key={i} className="flex items-center gap-2">
+                <svg
+                  className="h-4 w-4 text-primary flex-shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="h-3 w-3"
-                  >
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                </div>
-                <span className="text-sm">{feature}</span>
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                {feature}
               </li>
             ))}
           </ul>
-          <Button variant={plan.featured ? "default" : "outline"} className="w-full rounded-full">
+          <Button className="w-full" variant={plan.featured ? "default" : "outline"}>
             {plan.buttonText}
           </Button>
         </CardContent>
