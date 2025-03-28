@@ -5,6 +5,9 @@
 ## 🚀 Overview
 This is a high-performance, responsive, and beautifully designed AI SaaS Landing Page built with **Next.js 15, React 19, and TypeScript**. It utilizes **Tailwind CSS**, **Framer Motion**, and **Radix UI** to deliver an engaging and interactive user experience.
 
+# Overview of the page
+![image](https://github.com/user-attachments/assets/1ee79395-bba8-4b6e-82ab-f811fade49b1)
+
 ## 🛠️ Features
 - **Fast & Optimized** – Uses Next.js for server-side rendering and static site generation.
 - **Modern UI/UX** – Built with **shadcn/ui**, **Radix UI**, and **Lucide Icons**.
